@@ -40,9 +40,80 @@ export default class Data {
     if (response.status === 201) {
       return [];
     }
+   
     else if (response.status === 400) {
       return response.json().then(data => {
-        return data.errors;
+        return data.message.emailAddress;
+      });
+    }
+    else {
+      throw new Error();
+    }
+  }
+  
+  async createCourse(course, emailAddress, password) {
+    const response = await this.api('/courses', 'POST', course, true, { emailAddress, password });
+    console.log(response.status)
+    if (response.status === 201) {
+      return [];
+    }
+    else if (response.status === 401) {
+      return response.json().then(data => {
+        console.log(data)
+        return data.message;
+      });
+    }
+    else {
+      throw new Error();
+    }
+  }
+  
+  async getCourse(courseId) {
+    const response = await this.api(`/courses/${courseId}`, 'GET');
+    if (response.status === 200) {
+      return response.json().then(data => data);
+    }
+    else if (response.status === 401) {
+      return null;
+    }
+    else if (response.status === 404) {
+      return null;
+    }
+    else {
+      console.log(response.status)
+      console.log(response)
+      throw new Error();
+    }
+  }
+
+
+
+  async deleteCourse(courseId, emailAddress, password) {
+    const response = await this.api(`/courses/${courseId}`, 'DELETE', null, true, { emailAddress, password });
+    if (response.status === 204) {
+      return [];
+    } else if (response.status === 403) {
+      return response.json().then(data => {
+        console.log(data)
+        return data.message;
+      });
+    } else {
+      console.log(response.status )
+      throw new Error();
+    }
+  }
+
+
+  async updateCourse(courseId,course,emailAddress, password) {
+    const response = await this.api(`/courses/${courseId}`, 'PUT', course,true, { emailAddress, password });
+    console.log(response.status)
+    if (response.status === 204) {
+      return [];
+    }
+    else if (response.status === 400) {
+      return response.json().then(data => {
+        console.log(data)
+        return data.message;
       });
     }
     else {

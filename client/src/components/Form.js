@@ -4,8 +4,10 @@ export default (props) => {
   const {
     cancel,
     errors,
+    success,
     submit,
     submitButtonText,
+    cancelButtonText,
     elements,
   } = props;
 
@@ -21,19 +23,19 @@ export default (props) => {
 
   return (
     <div>
-      <ErrorsDisplay errors={errors} />
+      <ErrorsDisplay errors={errors} success={success}/>
       <form onSubmit={handleSubmit}>
         {elements()}
         <div className="pad-bottom">
           <button className="button" type="submit">{submitButtonText}</button>
-          <button className="button button-secondary" onClick={handleCancel}>Cancel</button>
+          <button className="button button-secondary" onClick={handleCancel}>{cancelButtonText}</button>
         </div>
       </form>
     </div>
   );
 }
 
-function ErrorsDisplay({ errors }) {
+function ErrorsDisplay({ errors,success }) {
   let errorsDisplay = null;
 
   if (errors.length) {
@@ -42,12 +44,24 @@ function ErrorsDisplay({ errors }) {
         <h2 className="validation--errors--label">Validation errors</h2>
         <div className="validation-errors">
           <ul>
-            {errors.map((error, i) => <li key={i}>{error}</li>)}
+             <li >{errors}</li>
           </ul>
         </div>
       </div>
     );
   }
-
+  if(success){
+  if (success.length) {
+    errorsDisplay = (
+      <div>
+        <h2 className="validation--errors--label">&#9989;</h2>
+        <div className="validation-errors">
+          <ul>
+             <li >{success}</li>
+          </ul>
+        </div>
+      </div>
+    );
+  }}
   return errorsDisplay;
 }

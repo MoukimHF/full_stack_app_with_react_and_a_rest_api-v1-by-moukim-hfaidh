@@ -17,6 +17,7 @@ export default class UserSignUp extends Component {
         lastName,
       emailAddress,
       password,
+      confpassword,
       errors,
     } = this.state;
 
@@ -29,6 +30,7 @@ export default class UserSignUp extends Component {
             errors={errors}
             submit={this.submit}
             submitButtonText="Sign Up"
+            cancelButtonText="cancel"
             elements={() => (
               <React.Fragment>
                 <input 
@@ -59,6 +61,13 @@ export default class UserSignUp extends Component {
                   value={password} 
                   onChange={this.change} 
                   placeholder="Password" />
+                  <input 
+                  id="confirmPassword" 
+                  name="confirmPassword"
+                  type="password"
+                  value={confpassword} 
+                  onChange={this.change} 
+                  placeholder=" Confirm password" />
               </React.Fragment>
             )} />
           <p>
@@ -72,7 +81,7 @@ export default class UserSignUp extends Component {
   change = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-console.log("1 :"+name+"2 :"+value)
+    console.log("1 :"+name+"2 :"+value)
     this.setState(() => {
       return {
         [name]: value
@@ -98,6 +107,7 @@ console.log("1 :"+name+"2 :"+value)
     };
     context.data.createUser(user)
     .then(errors=>{
+      console.log(errors)
       if(errors.length>0){
         this.setState({errors:errors})
       }
@@ -110,7 +120,7 @@ console.log("1 :"+name+"2 :"+value)
       }
     })
     .catch(err=>{
-      console.log(err);
+  
       this.props.history.push('/error');
 
       

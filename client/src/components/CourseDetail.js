@@ -2,20 +2,121 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 
 export default class CourseDetail extends Component {
+  state={
+    courseDetail:{},
+    authorized: false,
+    title: '',
+    description: '',
+    estimatedTime: '',
+    materialsNeeded: '',
+    userId:null,
+    errors: [],
+    success:[]
+  }
+  componentDidMount(){
+ this.detail()
+  }
     render() {
-        console.log(this.props.location)
-        console.log(this.props.history)
-        console.log(this.props)
-
+      const {
+        courseDetail,
+        authorized,
+    } = this.state;
         return (
+            
             <div>
                 <div className="actions--bar">
           <div className="bounds">
-            <div className="grid-100"><span><Link class="button" to={this.props.match.params.id+'/update'}>Update Course</Link><Link className="button" to={this.props.match.params.id+'/delete'}>Delete Course</Link></span><Link
-                className="button button-secondary" to="/">Return to List</Link></div>
+            <div className="grid-100">
+            {
+              authorized ? 
+              <span>
+            <Link className="button" to={this.props.match.params.id+'/update'}>Update Course</Link>
+            <Link className="button" to={this.props.match.params.id+'/delete'}>Delete Course</Link>
+            <Link className="button button-secondary" to="/">Return to List</Link>
+            </span>
+            :
+            <Link className="button button-secondary" to="/">Return to List</Link>
+
+            }
+            
+           
+                </div>
+          </div>
+        </div>
+        <div className="bounds course--detail">
+          <div className="grid-66">
+            <div className="course--header">
+              <h4 className="course--label">Course</h4>
+              <h3 className="course--title">{
+                courseDetail.title
+              }</h3>
+              <p>By { courseDetail.firstName+" "+courseDetail.lastName}</p>
+
+            </div>
+        <div className="course--description">
+              <p>{ courseDetail.description}</p>
+              
+            </div>
+          </div>
+          <div className="grid-25 grid-right">
+            <div className="course--stats">
+              <ul className="course--stats--list">
+                <li className="course--stats--list--item">
+                  <h4>Estimated Time</h4>
+                  <h3> { courseDetail.estimatedTime}</h3>
+                </li>
+                <li className="course--stats--list--item">
+                  <h4>Materials Needed</h4>
+                  <ul>
+                  { courseDetail.materialsNeeded}
+                    
+                    
+                  </ul>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
             </div>
         )
+    }
+    detail = ()=>{
+      const { context, match } = this.props;
+      context.data.getCourse(match.params.id)
+          .then(course => {
+            console.log(course)
+              if (context.authenticatedUser) {
+                  if (context.authenticatedUser.id === course.owner.id) {
+                      this.setState(() => {
+                          return {
+                              courseDetail:  { ...course.course,...course.owner },
+                              authorized: true,
+                          }
+
+                      });
+                      console.log(this.state.courseDetail)
+                  } else {
+                      this.setState(() => {
+                          return {
+                              courseDetail: { ...course.course,...course.owner },
+                          }
+                      });
+                  }
+              } else {
+                 try{ 
+                  if(course!=null){ 
+                  this.setState(() => {
+                      return {
+                          courseDetail:  { ...course.course,...course.owner },
+                      }
+                  });}
+                else{
+                  throw new Error()
+                }}
+                  catch(err){
+                    this.props.history.push('/notFound');
+                  }
+              }
+          });
     }
 }

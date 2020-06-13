@@ -23,7 +23,9 @@ export class Provider extends Component {
       data: this.data,
       actions:{ 
         signIn:this.signIn,
-        signOut:this.signOut
+        signOut:this.signOut,
+        removeCourse: this.removeCourse,
+        createCourse:this.createCourse
       }
     };
     return (
@@ -34,19 +36,26 @@ export class Provider extends Component {
   }
 
   
+
+  
   signIn = async (emailAddress, password) => {
+    console.log(emailAddress)
+    console.log(password)
     const user = await this.data.getUser(emailAddress, password);
     if (user !== null) {
+      const currentUser = { ...user, password };
       this.setState(() => {
         return {
-          authenticatedUser: user,
+          authenticatedUser: currentUser,
         };
       });
-      Cookies.set('authenticatedUser',JSON.stringify(user),{expires: 1});
+      Cookies.set('authenticatedUser',JSON.stringify(currentUser),{expires: 1});
 
     }
     return user;
   }
+
+
 
   signOut = () => {
 
@@ -55,7 +64,30 @@ export class Provider extends Component {
     });
     Cookies.remove('authenticatedUser');
   }
+
+
+  createCourse = async (course) => {
+    const { authenticatedUser } = this.state;
+    const error = await this.data.createCourse(course, authenticatedUser.emailAddress, authenticatedUser.password);
+    if (error.length) {
+      return error;
+    } else {
+      return true;
+    }
+  }
+  removeCourse = async (courseId) => {
+    const { authenticatedUser } = this.state;
+    const error = await this.data.deleteCourse(courseId, authenticatedUser.emailAddress, authenticatedUser.password);
+    if (error.length) {
+      return error;
+    } else {
+      return true;
+    }
+  }
+
+
 }
+
 
 export const Consumer = Context.Consumer;
 
