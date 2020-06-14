@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
-
+import ReactMarkdown from 'react-markdown'
 export default class CourseDetail extends Component {
   state={
     courseDetail:{},
@@ -21,6 +21,7 @@ export default class CourseDetail extends Component {
         courseDetail,
         authorized,
     } = this.state;
+
         return (
             
             <div>
@@ -53,10 +54,10 @@ export default class CourseDetail extends Component {
               <p>By { courseDetail.firstName+" "+courseDetail.lastName}</p>
 
             </div>
-        <div className="course--description">
-              <p>{ courseDetail.description}</p>
+       
+              <ReactMarkdown className="course--description" source={ courseDetail.description} escapeHtml={false} />
               
-            </div>
+          
           </div>
           <div className="grid-25 grid-right">
             <div className="course--stats">
@@ -67,11 +68,7 @@ export default class CourseDetail extends Component {
                 </li>
                 <li className="course--stats--list--item">
                   <h4>Materials Needed</h4>
-                  <ul>
-                  { courseDetail.materialsNeeded}
-                    
-                    
-                  </ul>
+                  <ReactMarkdown  source={ courseDetail.materialsNeeded} escapeHtml={false}/>
                 </li>
               </ul>
             </div>
@@ -85,6 +82,7 @@ export default class CourseDetail extends Component {
       context.data.getCourse(match.params.id)
           .then(course => {
             console.log(course)
+            try{ 
               if (context.authenticatedUser) {
                   if (context.authenticatedUser.id === course.owner.id) {
                       this.setState(() => {
@@ -103,7 +101,7 @@ export default class CourseDetail extends Component {
                       });
                   }
               } else {
-                 try{ 
+               
                   if(course!=null){ 
                   this.setState(() => {
                       return {
@@ -112,11 +110,13 @@ export default class CourseDetail extends Component {
                   });}
                 else{
                   throw new Error()
-                }}
-                  catch(err){
-                    this.props.history.push('/notFound');
-                  }
+                }
+                 
               }
+            }
+            catch(err){
+              this.props.history.push('/notFound');
+            }
           });
     }
 }

@@ -25,6 +25,7 @@ export default class UserSignIn extends Component {
             errors={errors}
             submit={this.submit}
             submitButtonText="Sign In"
+            cancelButtonText = "cancel"
             elements={() => (
               <React.Fragment>
                 <input 
