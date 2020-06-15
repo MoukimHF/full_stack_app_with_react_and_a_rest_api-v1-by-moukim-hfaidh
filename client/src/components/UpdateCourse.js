@@ -20,7 +20,6 @@ export default class UpdateCourse extends Component {
       const { firstName, lastName } = this.props.context.authenticatedUser;
    
       const {
-        authorized,
         title,
         description,
         estimatedTime,

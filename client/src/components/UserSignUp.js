@@ -8,6 +8,7 @@ export default class UserSignUp extends Component {
     lastName: '',
     emailAddress: '',
     password: '',
+    confpassword:'',
     errors: [],
   }
 
@@ -53,21 +54,25 @@ export default class UserSignUp extends Component {
                   type="text"
                   value={emailAddress} 
                   onChange={this.change} 
-                  placeholder="Email address" />
+                  placeholder="Email address" 
+                    autoComplete="username"
+                  />
                 <input 
                   id="password" 
                   name="password"
                   type="password"
                   value={password} 
                   onChange={this.change} 
-                  placeholder="Password" />
+                  placeholder="Password"
+                  autoComplete="new-password" />
                   <input 
-                  id="confirmPassword" 
-                  name="confirmPassword"
+                  id="confpassword" 
+                  name="confpassword"
                   type="password"
                   value={confpassword} 
                   onChange={this.change} 
-                  placeholder=" Confirm password" />
+                  placeholder=" Confirm password"
+                  autoComplete="new-password" />
               </React.Fragment>
             )} />
           <p>
@@ -81,7 +86,6 @@ export default class UserSignUp extends Component {
   change = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    console.log("1 :"+name+"2 :"+value)
     this.setState(() => {
       return {
         [name]: value
@@ -96,8 +100,10 @@ export default class UserSignUp extends Component {
         lastName,
       emailAddress,
       password,
-     
+      confpassword,
+      
     } = this.state; 
+
     const user = {
         firstName,
         lastName,
@@ -105,9 +111,15 @@ export default class UserSignUp extends Component {
       password,
      
     };
+
+    if(confpassword!==password){
+      const matching = 'password and conf pass must be the same ';
+      let err = [...this.state.errors,matching]
+      this.setState({errors:err})
+    }
+    else{
     context.data.createUser(user)
     .then(errors=>{
-      console.log(errors)
       if(errors.length>0){
         this.setState({errors:errors})
       }
@@ -120,14 +132,13 @@ export default class UserSignUp extends Component {
       }
     })
     .catch(err=>{
-  
       this.props.history.push('/error');
 
       
     
     })
 
-  }
+  }}
 
   cancel = () => {
 

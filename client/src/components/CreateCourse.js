@@ -107,7 +107,6 @@ export default class CreateCourse extends Component {
 
   submit = () => {
     const { context } = this.props;
-    console.log(context.authenticatedUser)
     const userId=context.authenticatedUser.id
     const {
         title,
@@ -138,7 +137,6 @@ export default class CreateCourse extends Component {
     
     })
     .catch(err=>{
-      console.log(err);
       this.props.history.push('/error');
 
       

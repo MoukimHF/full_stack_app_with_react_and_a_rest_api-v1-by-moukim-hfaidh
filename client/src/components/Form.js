@@ -54,7 +54,7 @@ function ErrorsDisplay({ errors,success }) {
   if (success.length) {
     errorsDisplay = (
       <div>
-        <h2 className="validation--errors--label">&#9989;</h2>
+        <h2 className="validation--errors--label"><span role="img" aria-label="success">&#9989;</span></h2>
         <div className="validation-errors">
           <ul>
              <li >{success}</li>

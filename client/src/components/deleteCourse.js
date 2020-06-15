@@ -10,15 +10,11 @@ export default class deleteCourse extends Component {
       }
     render() {
         const {
-            courseId,
             success,
           errors,
         } = this.state;
        
-        const {
-            removeCourse
-        } = this.props.context.actions;
-    
+       
         return (
             <div>
             <div className="actions--bar">

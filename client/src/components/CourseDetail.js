@@ -81,7 +81,6 @@ export default class CourseDetail extends Component {
       const { context, match } = this.props;
       context.data.getCourse(match.params.id)
           .then(course => {
-            console.log(course)
             try{ 
               if (context.authenticatedUser) {
                   if (context.authenticatedUser.id === course.owner.id) {
@@ -92,7 +91,6 @@ export default class CourseDetail extends Component {
                           }
 
                       });
-                      console.log(this.state.courseDetail)
                   } else {
                       this.setState(() => {
                           return {

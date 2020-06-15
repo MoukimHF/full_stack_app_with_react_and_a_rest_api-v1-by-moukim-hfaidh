@@ -43,7 +43,13 @@ export default class Data {
    
     else if (response.status === 400) {
       return response.json().then(data => {
-        return data.message.emailAddress;
+        console.log(data)
+        console.log(data.hasOwnProperty('message'))
+        if(data.hasOwnProperty('message')){
+          return data.message.emailAddress;
+        }
+        return data.errors;
+       
       });
     }
     else {
@@ -61,6 +67,12 @@ export default class Data {
       return response.json().then(data => {
         console.log(data)
         return data.message;
+      });
+    }
+    else if (response.status === 400) {
+      return response.json().then(data => {
+        console.log(data)
+        return data.errors;
       });
     }
     else {
@@ -98,7 +110,6 @@ export default class Data {
         return data.message;
       });
     } else {
-      console.log(response.status )
       throw new Error();
     }
   }
@@ -106,16 +117,20 @@ export default class Data {
 
   async updateCourse(courseId,course,emailAddress, password) {
     const response = await this.api(`/courses/${courseId}`, 'PUT', course,true, { emailAddress, password });
-    console.log(response.status)
     if (response.status === 204) {
       return [];
     }
     else if (response.status === 400) {
       return response.json().then(data => {
-        console.log(data)
+        return data.errors;
+      });
+    }
+    else if (response.status === 401) {
+      return response.json().then(data => {
         return data.message;
       });
     }
+    
     else {
       throw new Error();
     }
